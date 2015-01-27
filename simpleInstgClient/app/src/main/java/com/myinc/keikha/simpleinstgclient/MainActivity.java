@@ -70,11 +70,20 @@ public class MainActivity extends ActionBarActivity {
 
                             photos.clear();
                             photosJson = response.getJSONArray("data");
-                            for (int i =0;i<photosJson.length() ; i++)
+                            for (int i =0; i<photosJson.length() ; i++)
                             {
+
                                 JSONObject photoJSON = photosJson.getJSONObject(i);
                                 InstagramPhoto photo = new InstagramPhoto();
                                 photo.username = photoJSON.getJSONObject("user").getString("username");
+
+                                try {
+                                    photo.profilePictureURL = photoJSON.getJSONObject("user").getString("profile_picture");
+                                }
+                                catch(JSONException e)
+                                {
+                                    photo.profilePictureURL="";
+                                }
 
                                 try{
                                     photo.caption = photoJSON.getJSONObject("caption").getString("text");
@@ -87,8 +96,6 @@ public class MainActivity extends ActionBarActivity {
 
                                 photo.imageURL = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                                 photo.hight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
-
-
 
                                 try{
                                     photo.likes_count = photoJSON.getJSONObject("likes").getInt("count");
