@@ -4,5 +4,7 @@
     <string name="app_name">simpleInstgClient</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="popularPhotosCaption">Popular Photos</string>
+    <string name="default_caption_text">This is defualt caption</string>
 
 </resources>
