@@ -63,7 +63,8 @@ public class SearchActivity extends ActionBarActivity {
         // responseData ==> results ==> [x] ==> tbURL
 
 
+        // This is a test for the git
         String query = etQuery.getText().toString();
-        HttpClient
+
     }
 }
