@@ -60,22 +60,24 @@ public class SearchActivity extends ActionBarActivity {
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                customLoadMoreDataFromApi(page);
-                // or customLoadMoreDataFromApi(totalItemsCount);
+//                int start = page * 8 ;
+//                customLoadMoreDataFromApi(start);
+                customLoadMoreDataFromApi(totalItemsCount);
             }
         });
     }
 
 
     // Append more data into the adapter
-    public void customLoadMoreDataFromApi(int offset) {
+    public void customLoadMoreDataFromApi(final int offset) {
         // This method probably sends out a network request and appends new data items to your adapter.
         // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
         // Deserialize API response and then construct new objects to append to the adapter
 
         String query = etQuery.getText().toString();
-        String searchURL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+query+"&rsz=8";
+        String searchURL = "https://ajax.googleapis.com/ajax/services/search/images";
         RequestParams params = new RequestParams();
+        params.add("v","1.0");
         params.add("q", query);
         params.add("rsz","8");
         params.add("start", String.valueOf(offset));
@@ -106,8 +108,10 @@ public class SearchActivity extends ActionBarActivity {
                             imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
 //                            imageResults.clear(); // if it is a new query, otherwise don't clear
 
+                            imageResults.addAll(offset , ImageResult.fromJsonArray(imageResultsJson));
+                            aImageResults.notifyDataSetChanged();
                             // changes in the adapter, modifies the underlying data
-                            aImageResults.addAll( ImageResult.fromJsonArray(imageResultsJson));
+//                            aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
 
 
                         } catch (JSONException e) {
@@ -245,8 +249,8 @@ public class SearchActivity extends ActionBarActivity {
                         JSONArray imageResultsJson;
                         try {
                             imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                            imageResults.clear(); // if it is a new query, otherwise don't clear
 
+                            aImageResults.clear();
                             // changes in the adapter, modifies the underlying data
                             aImageResults.addAll( ImageResult.fromJsonArray(imageResultsJson));
 

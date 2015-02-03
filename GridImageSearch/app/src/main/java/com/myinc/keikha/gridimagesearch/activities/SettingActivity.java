@@ -187,6 +187,7 @@ public class SettingActivity extends ActionBarActivity  {
     public void onSaveClick(View view) {
 //
         Intent i = new Intent();
+        settings.site = etSite.getText().toString();
         i.putExtra("settings" , settings);
 //
         setResult(RESULT_OK , i);
