@@ -10,7 +10,7 @@ The following required information are represented:
 * [x] Required: User can tap on an image result and see it in full screen
 * [x] Requited: User can tap the settings and define advanced search filters
 * [x] Following filters are available:
-* * Size (small, medium, large, extra-large)
+* Size (small, medium, large, extra-large)
 * Color filter (black, blue, brown, gray, green, etc...)
 * Type (faces, photo, clip art, line art)
 * Site (the domain to search )
