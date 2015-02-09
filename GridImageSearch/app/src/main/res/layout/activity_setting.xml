@@ -74,7 +74,7 @@
         android:layout_alignParentEnd="true"
         android:gravity="right"
         android:textAlignment="gravity"
-        
+        android:entries="@array/size_array"
         />
 
     <Spinner
@@ -85,7 +85,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:gravity="right"
-        android:textAlignment="gravity" />
+        android:textAlignment="gravity"
+        android:entries="@array/color_array"
+
+        />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -95,7 +98,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:gravity="right"
-        android:textAlignment="gravity" />
+        android:textAlignment="gravity"
+        android:entries="@array/type_array"
+        />
 
     <EditText
         android:layout_width="wrap_content"

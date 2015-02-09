@@ -9,5 +9,40 @@
     <string name="image_title">Image Title</string>
     <string name="title_activity_image_display">Full Image</string>
     <string name="title_activity_setting">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string-array name="size_array">
+        <item>Icon</item>
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>X Large</item>
+        <item>XX Large</item>
+        <item>Huge</item>
+    </string-array>
+
+    <string-array name="color_array">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Gray</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Teal</item>
+        <item>White</item>
+        <item>Yellow</item>
+    </string-array>
+
+
+    <string-array name="type_array">
+        <item>Faces</item>
+        <item>Photographic</item>
+        <item>Clipart</item>
+        <item>Line drawing</item>
+    </string-array>
 
 </resources>

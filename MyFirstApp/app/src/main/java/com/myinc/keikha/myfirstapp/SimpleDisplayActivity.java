@@ -53,7 +53,7 @@ public class SimpleDisplayActivity extends ActionBarActivity {
         String fieldValue = etWords.getText().toString();
         // set the value on the label
 
-        tvLabel.setText(fieldValue);
+        tvLabel.setText(fieldValue + "by Mostafa");
         // display the value as an alert
         Toast.makeText( this, fieldValue, Toast.LENGTH_SHORT).show();
     }

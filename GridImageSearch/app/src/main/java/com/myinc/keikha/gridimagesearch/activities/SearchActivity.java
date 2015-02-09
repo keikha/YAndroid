@@ -1,5 +1,6 @@
 package com.myinc.keikha.gridimagesearch.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -65,7 +66,9 @@ public class SearchActivity extends ActionBarActivity {
                 customLoadMoreDataFromApi(totalItemsCount);
             }
         });
+
     }
+
 
 
     // Append more data into the adapter
@@ -171,6 +174,13 @@ public class SearchActivity extends ActionBarActivity {
             Intent i = new Intent( this, SettingActivity.class );
             i.putExtra("settings", this.settings);
             startActivityForResult(i, REQUEST_RESULT);
+
+//          android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+//          SettingDialog st = SettingDialog.newInstance(this.settings);
+//
+//          st.show(fm,"test_tag");
+
+
 //            startActivity(i);
 
         }
