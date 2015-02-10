@@ -50,6 +50,51 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiURL , params , handler);
     }
 
+    public void getHomeTimeline(AsyncHttpResponseHandler handler , Long id)
+    {
+        String apiURL = getApiUrl("statuses/home_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("since_id", 1);
+        params.put("max_id" , id);
+        getClient().get(apiURL , params , handler);
+    }
+
+    public void refreshHomeTimeline(AsyncHttpResponseHandler handler , Long id)
+    {
+        String apiURL = getApiUrl("statuses/home_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("since_id", id);
+        getClient().get(apiURL , params , handler);
+    }
+
+
+    public void postStatus(AsyncHttpResponseHandler handler , String status)
+    {
+
+        String apiURL = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+        getClient().post( apiURL , params , handler );
+    }
+
+    public void getAccountSetting(AsyncHttpResponseHandler handler )
+    {
+
+        String apiURL = getApiUrl("account/settings.json");
+        getClient().get( apiURL , handler );
+    }
+
+    public void getUserInfo(AsyncHttpResponseHandler handler , String screen_name)
+    {
+        String apiURL = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screen_name);
+
+        getClient().get(apiURL , params , handler);
+    }
+
 
 
     /// Composing a tweet
