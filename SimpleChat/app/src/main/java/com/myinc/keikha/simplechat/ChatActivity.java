@@ -1,7 +1,7 @@
 package com.myinc.keikha.simplechat;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
+import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,15 +9,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ListView;
 
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ChatActivity extends Activity {
@@ -29,7 +32,11 @@ public class ChatActivity extends Activity {
     public static final String USER_ID_KEY = "userId";
     private EditText etMessage;
     private Button btSend;
-
+    private ListView lvChat;
+    private ChatListAdapter aMessages;
+    private ArrayList<Message> messages;
+    private static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ public class ChatActivity extends Activity {
 //        ParseObject testObject = new ParseObject("TestObject");
 //        testObject.put("foo", "bar");
 //        testObject.saveInBackground();
+
+        handler.postDelayed(runnable, 100);
     }
 
 
@@ -65,23 +74,55 @@ public class ChatActivity extends Activity {
         // Find the text field and button
         etMessage = (EditText) findViewById(R.id.etMessage);
         btSend = (Button) findViewById(R.id.btSend);
+
+
+
+        lvChat = (ListView) findViewById(R.id.lvChat);
+        messages = new ArrayList<Message>();
+        aMessages = new ChatListAdapter(ChatActivity.this , sUserId , messages);
+        lvChat.setAdapter(aMessages);
+
         // When send button is clicked, create message object on Parse
         btSend.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 String data = etMessage.getText().toString();
-                ParseObject message = new ParseObject("Message");
-                message.put(USER_ID_KEY, sUserId);
-                message.put("body", data);
+                Message message = new Message();
+
+
+                message.setUserId(sUserId);
+                message.setBody(data);
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
-                                Toast.LENGTH_SHORT).show();
+                        receiveMessage();
                     }
                 });
                 etMessage.setText("");
+            }
+        });
+    }
+
+    private void receiveMessage() {
+
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+        query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query.orderByAscending("createdAt");
+        query.findInBackground(new FindCallback<Message>() {
+            @Override
+            public void done(List<Message> newMessages, ParseException e) {
+                if(e==null)
+                {
+                    messages.clear();
+                    messages.addAll(newMessages);
+                    aMessages.notifyDataSetChanged();
+                    lvChat.invalidate();
+                }
+                else
+                {
+                        Log.d("message" , "Error : "  + e.getMessage());
+                }
             }
         });
     }
@@ -120,5 +161,17 @@ public class ChatActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            refreshMessages();
+            handler.postDelayed(this, 100);
+        }
+    };
+
+    private void refreshMessages() {
+        receiveMessage();
     }
 }
