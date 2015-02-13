@@ -2,6 +2,10 @@ package com.codepath.apps.mySimpleTweets.models;
 
 import android.text.format.DateUtils;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,11 +66,21 @@ import java.util.Locale;
 
  *
  */
-public class Tweet {
 
+@Table(name = "Tweets")
+public class Tweet extends Model{
+
+
+    @Column(name = "body")
     private String body;
+
+    @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid; //unique id
+
+    @Column(name = "createdAt")
     private String createdAt;
+
+    @Column(name = "user", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     private User user;
 
     // deserialize the json and build Tweet object

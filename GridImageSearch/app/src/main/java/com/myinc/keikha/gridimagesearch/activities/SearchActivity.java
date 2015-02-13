@@ -197,7 +197,7 @@ public class SearchActivity extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 //get the age out of the form data
 //                age = data.getIntExtra("age", -1);
-                settings = (SettingsOptions) data.getSerializableExtra("settings");
+                settings = ( SettingsOptions) data.getSerializableExtra("settings");
                 Log.i("INFO", settings.toString());
                 this.runTheSearch();
             }

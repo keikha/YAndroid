@@ -1,5 +1,10 @@
 package com.codepath.apps.mySimpleTweets.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,10 +27,21 @@ import org.json.JSONObject;
 
 
  */
-public class User {
+@Table(name = "Users")
+
+public class User extends Model{
+
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
+
+    @Column(name = "screenName")
     private String screenName ;
+
+    @Column(name = "profileImageURL")
     private String profileImageUrl;
 
     //deserialize the user json and create the object
