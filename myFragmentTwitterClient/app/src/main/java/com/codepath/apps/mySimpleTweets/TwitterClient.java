@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
@@ -86,16 +87,63 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get( apiURL , handler );
     }
 
-    public void getUserInfo(AsyncHttpResponseHandler handler , String screen_name)
-    {
-        String apiURL = getApiUrl("users/show.json");
-        RequestParams params = new RequestParams();
-        params.put("screen_name", screen_name);
 
+    public void getMentionsTimeline(JsonHttpResponseHandler handler) {
+        String apiURL = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        getClient().get(apiURL , params , handler);
+    }
+
+    public void getMentionsTimeline(JsonHttpResponseHandler handler , Long id) {
+        String apiURL = getApiUrl("statuses/mentions_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("since_id", 1);
+        params.put("max_id" , id);
+        getClient().get(apiURL , params , handler);
+    }
+
+    public void getUserTimeline(AsyncHttpResponseHandler handler)
+    {
+        String apiURL = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
         getClient().get(apiURL , params , handler);
     }
 
 
+    public void getUserTimeline(String screenName , AsyncHttpResponseHandler handler)
+    {
+        String apiURL = getApiUrl("statuses/user_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("screen_name" , screenName);
+        getClient().get(apiURL , params , handler);
+    }
+
+
+    public void getUserInfo(AsyncHttpResponseHandler handler)
+    {
+        String apiURL = getApiUrl("account/verify_credentials.json");
+        getClient().get(apiURL , null, handler);
+    }
+
+    public void getUserInfo(String screen_name , AsyncHttpResponseHandler handler )
+    {
+        String apiURL = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name", screen_name);
+        getClient().get(apiURL , params, handler);
+    }
+
+    public void getUserInfo(AsyncHttpResponseHandler handler , Long id)
+    {
+        String apiURL = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("user_id", id);
+        getClient().get(apiURL , null, handler);
+    }
 
     /// Composing a tweet
 

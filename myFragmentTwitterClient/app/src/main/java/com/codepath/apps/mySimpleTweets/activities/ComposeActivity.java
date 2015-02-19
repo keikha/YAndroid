@@ -8,9 +8,18 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.mySimpleTweets.R;
+import com.codepath.apps.mySimpleTweets.TwitterApplication;
+import com.codepath.apps.mySimpleTweets.TwitterClient;
+import com.codepath.apps.mySimpleTweets.models.User;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class ComposeActivity extends ActionBarActivity {
 
@@ -19,11 +28,18 @@ public class ComposeActivity extends ActionBarActivity {
     private ImageView ivProfile;
     private TextView username;
     private TextView screenName;
+
+    private TwitterClient client;
+    private User user;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        Intent i = getIntent();
+
+        client = TwitterApplication.getRestClient();
 
         setContentView(R.layout.activity_compose);
         etTweet = (EditText) findViewById(R.id.etBody);
@@ -31,10 +47,34 @@ public class ComposeActivity extends ActionBarActivity {
         screenName = (TextView) findViewById(R.id.tvUserScreenName);
         ivProfile = (ImageView) findViewById(R.id.ivProfileImage);
 
-        screenName.setText("@"+i.getStringExtra("screenname"));
-        username.setText("Mostaf Keikha");
-//        username.setText(i.getStringExtra("name"));
-//        Picasso.with(this).load(i.getStringExtra("profileImage")).into(ivProfile);
+
+        client.getUserInfo(new JsonHttpResponseHandler() {
+                               @Override
+                               public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                   // my current user account
+                                   user = User.fromJson(response);
+
+                                   if(user!=null) {
+                                       screenName.setText("@" + user.getScreenName());
+                                       username.setText(user.getName());
+                                //        username.setText(i.getStringExtra("name"));
+                                       Picasso.with(getApplicationContext()).load(user.getProfileImageUrl()).into(ivProfile);
+                                   }
+
+//                                       getSupportActionBar().setTitle("@" + user.getScreenName());
+                               }
+                           }
+        );
+
+
+//        Intent i = getIntent();
+//
+//
+//        Toast.makeText( getApplicationContext(), "got the user : " + user.getName(), Toast.LENGTH_SHORT).show();
+
+
+
+
 
     }
 
@@ -55,11 +95,22 @@ public class ComposeActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_tweet) {
-            Intent i = new Intent();
-            i.putExtra("body" , etTweet.getText().toString());
-//
-            setResult(RESULT_OK , i);
-            // step 2 : dismiss this screen and go back
+
+
+
+                String body = etTweet.getText().toString();
+                client.postStatus(new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                        Long id = tweets.get(0).getUid();
+//                        populateRefresh(id);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                    }
+                }, body);
 
             this.finish();
         }

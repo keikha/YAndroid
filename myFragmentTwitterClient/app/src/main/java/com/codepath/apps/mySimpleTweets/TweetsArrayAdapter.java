@@ -1,6 +1,7 @@
 package com.codepath.apps.mySimpleTweets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.codepath.apps.mySimpleTweets.activities.ProfileActivity;
 import com.codepath.apps.mySimpleTweets.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +36,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // 1  get the tweet
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
         // 2 find or inflate the template
         if(convertView==null)
         {
@@ -54,8 +57,23 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         tvUser.setText("@"+tweet.getUser().getScreenName());
 
         ivProfile.setImageResource(android.R.color.transparent);
+
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfile);
 
+        ivProfile.setTag(tweet.getUser().getScreenName());
+
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent( getContext() , ProfileActivity.class);
+
+                i.putExtra("screen_name" , tweet.getUser().getScreenName());
+
+                getContext().startActivity(i);
+
+            }
+        });
         // 5 return the view to be inserted into the list
         return convertView;
 

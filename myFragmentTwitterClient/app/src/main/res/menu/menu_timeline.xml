@@ -4,10 +4,19 @@
     tools:context="com.codepath.apps.mySimpleTweets.activities.TimelineActivity">
 
     <item
-        android:title="Compose"
         android:id="@+id/miCompose"
         android:icon="@drawable/ic_compose"
-        app:showAsAction="always"
+        android:title="Compose"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile"
+        app:showAsAction="ifRoom"
+        android:onClick="onProfileView"
         />
+
 
 </menu>
