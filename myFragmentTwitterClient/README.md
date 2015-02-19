@@ -9,13 +9,13 @@ The following user stories are implemented:
 * [x] User is displayed the relative timestamp for each tweet "8m", "7h"
 * [x] User can view more tweets as they scroll with infinite pagination
 * [x] User can compose a new tweet
-* [x] User can click a ?Compose? icon in the Action Bar on the top right
-* [x] User can then enter a new tweet and post this to twitter
-* [x] User is taken back to home timeline with new tweet visible in timeline
-* [x] User can refresh tweets timeline by pulling down to refresh (i.e pull-to-refresh)
+* [x] User can click a Compose icon in the Action Bar on the top right
+* [x] User can see two tabs showing the home timeline and mentions timeline
+* [x] User can click on any photo and go to the profile activity and see picture, tagline, # of followers, # of following, and tweets on their profile.
 
 
-Time spent: about 8 hours for developing  the app.
+
+Time spent: about 9 hours for developing  the app.
 
 
 ![alt tag](https://github.com/keikha/YAndroid/blob/master/mySimpleTweets/demo.gif)
