@@ -15,6 +15,7 @@ import com.codepath.apps.mySimpleTweets.R;
 import com.codepath.apps.mySimpleTweets.TwitterApplication;
 import com.codepath.apps.mySimpleTweets.TwitterClient;
 import com.codepath.apps.mySimpleTweets.models.Tweet;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -32,6 +33,15 @@ public class HomeTimelineFragment extends TweetsListFragmen {
     private TwitterClient client;
     private SwipeRefreshLayout swipContainer;
 
+    public static HomeTimelineFragment newInstance()
+    {
+        HomeTimelineFragment fragment = new HomeTimelineFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,16 +54,29 @@ public class HomeTimelineFragment extends TweetsListFragmen {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
 
         return super.onCreateView(inflater, parent, savedInstanceState);
-
-
-
-
     }
 
+
+    public void postTweet(String body)
+    {
+        client.postStatus(new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+//                        Long id = tweets.get(0).getUid();
+//                        populateRefresh(id);
+                           populateTimeline();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        }, body);
+    }
     // send an API request to get the json timeline
     // populate the listview with the data
     @Override
-    protected void populateTimeline()
+    public void populateTimeline()
     {
         client.getHomeTimeline(new JsonHttpResponseHandler()
                                {
@@ -88,8 +111,9 @@ public class HomeTimelineFragment extends TweetsListFragmen {
 
     }
 
+
     @Override
-    protected  void populateMore(Long id)
+    public  void populateMore(Long id)
     {
         client.getHomeTimeline(new JsonHttpResponseHandler()
         {
@@ -108,8 +132,11 @@ public class HomeTimelineFragment extends TweetsListFragmen {
     }
 
 //    @Override
-    protected  void populateRefresh(Long id)
+    public  void populateRefresh()
     {
+
+        Long id = tweets.get(0).getUid();
+
         client.refreshHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

@@ -96,22 +96,12 @@ public class ComposeActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_tweet) {
 
-
-
                 String body = etTweet.getText().toString();
-                client.postStatus(new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-//                        Long id = tweets.get(0).getUid();
-//                        populateRefresh(id);
-                    }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-                    }
-                }, body);
-
+            Intent i = new Intent();
+            i.putExtra("body" , etTweet.getText().toString());
+            setResult(RESULT_OK , i);
             this.finish();
         }
 

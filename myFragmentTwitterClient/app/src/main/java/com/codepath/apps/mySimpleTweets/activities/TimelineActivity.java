@@ -23,6 +23,7 @@ import com.codepath.apps.mySimpleTweets.TwitterApplication;
 import com.codepath.apps.mySimpleTweets.TwitterClient;
 import com.codepath.apps.mySimpleTweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.mySimpleTweets.fragments.MentionsTimelineFragment;
+import com.codepath.apps.mySimpleTweets.fragments.SmartFragmentStatePagerAdapter;
 import com.codepath.apps.mySimpleTweets.fragments.TweetsListFragmen;
 import com.codepath.apps.mySimpleTweets.models.Tweet;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -55,9 +56,6 @@ public class TimelineActivity extends ActionBarActivity {
         // Set the viewPager Adapter for the view pager
         tweetsPager = new TweetsPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(tweetsPager);
-
-
-
 
         // Find the sliding tabstrip
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -149,8 +147,7 @@ public class TimelineActivity extends ActionBarActivity {
 //            i.putExtra("screenname", screenName);
 //            i.putExtra("profileImage", profileImageURL);
 //
-            startActivityForResult(i , REQUEST_RESULT);
-
+            startActivityForResult(i, REQUEST_RESULT);
 
         }
        return super.onOptionsItemSelected(item);
@@ -164,8 +161,10 @@ public class TimelineActivity extends ActionBarActivity {
         if(requestCode==REQUEST_RESULT)
         {
             if(resultCode==RESULT_OK) {
-
-                    
+                String body = data.getStringExtra("body");
+                ((HomeTimelineFragment) tweetsPager.getRegisteredFragment(0)).postTweet(body);
+//                Toast.makeText(getApplicationContext(), "returned : " + body, Toast.LENGTH_SHORT).show();
+//                ((HomeTimelineFragment) tweetsPager.getRegisteredFragment(0)).populateTimeline();
             }
         }
     }
@@ -180,10 +179,10 @@ public class TimelineActivity extends ActionBarActivity {
 
 
     // returns the order of the fragments in the vew pager
-    public class TweetsPagerAdapter extends FragmentPagerAdapter
+    public static class TweetsPagerAdapter extends SmartFragmentStatePagerAdapter
     {
 
-
+        private static int NUM_ITEMS = 2;
 
         private String tabTitles[] = {"Home" , "Mentions"};
 
@@ -204,13 +203,15 @@ public class TimelineActivity extends ActionBarActivity {
         // control the order and creation of fragment
         @Override
         public Fragment getItem(int position) {
+
+
             if(position==0)
             {
-                return new HomeTimelineFragment();
+                return HomeTimelineFragment.newInstance();
             }
             else if (position==1)
             {
-                return new MentionsTimelineFragment();
+                return MentionsTimelineFragment.newInstance();
             }
 
             else
@@ -219,7 +220,7 @@ public class TimelineActivity extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return tabTitles.length;
+            return NUM_ITEMS;
         }
     }
 

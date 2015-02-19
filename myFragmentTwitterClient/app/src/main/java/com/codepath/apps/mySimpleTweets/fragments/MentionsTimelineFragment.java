@@ -21,6 +21,15 @@ public class MentionsTimelineFragment extends TweetsListFragmen {
 
     private TwitterClient client;
 
+
+    public static MentionsTimelineFragment newInstance()
+    {
+        MentionsTimelineFragment fragment = new MentionsTimelineFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +42,7 @@ public class MentionsTimelineFragment extends TweetsListFragmen {
     // send an API request to get the json timeline
     // populate the listview with the data
 //    @Override
-    protected  void populateTimeline()
+    public  void populateTimeline()
     {
         client.getMentionsTimeline(new JsonHttpResponseHandler()
                                {
@@ -69,7 +78,7 @@ public class MentionsTimelineFragment extends TweetsListFragmen {
     }
 
 //    @Override
-    protected  void populateMore(Long id)
+public  void populateMore(Long id)
     {
 
         populateTimeline();
@@ -90,7 +99,7 @@ public class MentionsTimelineFragment extends TweetsListFragmen {
     }
 
 //    @Override
-    protected  void populateRefresh(Long id)
+public  void populateRefresh(Long id)
     {
         client.refreshHomeTimeline(new JsonHttpResponseHandler() {
             @Override

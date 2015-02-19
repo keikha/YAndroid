@@ -41,6 +41,8 @@ public class TweetsListFragmen extends Fragment {
 
 //    private OnItemSelectedListener listener;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +52,9 @@ public class TweetsListFragmen extends Fragment {
         aTweets = new TweetsArrayAdapter( getActivity() , tweets);
         // connect the adapter to the listview
 
-
-
-
-
-
-
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
@@ -115,13 +113,13 @@ public class TweetsListFragmen extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), "no of new tweets: " + tweets.size(), Toast.LENGTH_SHORT).show();
     }
 
-    protected void populateTimeline()
+    public void populateTimeline()
     {}
 
-    protected void populateMore(Long id)
+    public void populateMore(Long id)
     {}
 
-    protected void populateRefresh(Long id)
+    public void populateRefresh()
     {}
 
 
