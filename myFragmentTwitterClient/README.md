@@ -18,7 +18,7 @@ The following user stories are implemented:
 Time spent: about 9 hours for developing  the app.
 
 
-![alt tag](https://github.com/keikha/YAndroid/blob/master/mySimpleTweets/demo.gif)
+![alt tag](https://github.com/keikha/YAndroid/blob/master/myFragmentTwitterClient/demo.gif?raw=true)
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
