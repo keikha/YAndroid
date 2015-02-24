@@ -1,0 +1,6 @@
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/classes/debug
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a019590094f924690862aea09df058475abc9419.jar
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-daa82c31c75d627cff56ca89ceca6762883b51ed.jar
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/Parse-1.6.0-667e6c74da5ee1eab5a6c7589a6ac69ab7333160.jar
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/classes-2b4f2799041f31bd8e22b9e2cd388720f02f2630.jar
+/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/classes-f109153b92841d415343137a8a28cab1276406cb.jar

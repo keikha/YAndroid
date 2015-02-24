@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/classes-f109153b92841d415343137a8a28cab1276406cb.jar" />
+    </item>
+    <item
+        jar="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
+        <dex dex="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-daa82c31c75d627cff56ca89ceca6762883b51ed.jar" />
+    </item>
+    <item
+        jar="/Users/keikha/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
+        <dex dex="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-a019590094f924690862aea09df058475abc9419.jar" />
+    </item>
+    <item
+        jar="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
+        <dex dex="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/classes-2b4f2799041f31bd8e22b9e2cd388720f02f2630.jar" />
+    </item>
+    <item
+        jar="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/libs/Parse-1.6.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2a812174191af5a4513a873602a765b0171f252c">
+        <dex dex="/Users/keikha/AndroidStudioProjects/YAndroid/Anywall/app/build/intermediates/pre-dexed/debug/Parse-1.6.0-667e6c74da5ee1eab5a6c7589a6ac69ab7333160.jar" />
+    </item>
+
+</items>
