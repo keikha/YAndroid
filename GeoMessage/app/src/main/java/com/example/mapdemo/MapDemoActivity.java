@@ -9,14 +9,18 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
@@ -38,7 +42,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -57,11 +64,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MapDemoActivity extends FragmentActivity implements
+public class MapDemoActivity extends ActionBarActivity implements
 		GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GoogleMap.OnMapLongClickListener {
 
+    private static final int MOMENTS2_REQUEST_CODE = 2;
 	private SupportMapFragment mapFragment;
 	private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
@@ -93,7 +101,7 @@ public class MapDemoActivity extends FragmentActivity implements
     private static final float OFFSET_CALCULATION_ACCURACY = 0.01f;
 
     // Maximum results returned from a Parse query
-    private static final int MAX_POST_SEARCH_RESULTS = 20;
+    private static final int MAX_POST_SEARCH_RESULTS = 10;
 
     // Maximum post search radius for map in kilometers
     private static final int MAX_POST_SEARCH_DISTANCE = 100;
@@ -110,6 +118,9 @@ public class MapDemoActivity extends FragmentActivity implements
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private float radius = 250.0f;
+
+    private Circle mapCircle;
+    private boolean hasSetUpInitialLocation;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -148,7 +159,7 @@ public class MapDemoActivity extends FragmentActivity implements
             }
         });
 
-        ParseObject.registerSubclass(GeoMessagePost.class);
+        ParseObject.registerSubclass(Moment.class);
         Parse.initialize(this, "sipGemcmarF0ZpuYeVNHfFaxeu770W5QFxIpCHOR", "W6MlHK0qQ50KnlOpr0VLQOgapsEd8FsujEQmW0LO");
 
         if (ParseUser.getCurrentUser() != null) { // start with existing user
@@ -307,7 +318,25 @@ public class MapDemoActivity extends FragmentActivity implements
 //                Double.toString(location.getLatitude()) + "," +
 //                Double.toString(location.getLongitude());
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+        if (currentLocation != null
+                && geoPointFromLocation(location)
+                .distanceInKilometersTo(geoPointFromLocation(currentLocation)) < 0.01) {
+            // If the location hasn't changed by more than 10 meters, ignore it.
+            return;
+        }
         currentLocation = location;
+        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (!hasSetUpInitialLocation) {
+            // Zoom to the current location.
+            updateZoom(myLatLng);
+            hasSetUpInitialLocation = true;
+        }
+        // Update map radius indicator
+
+
+        updateCircle(myLatLng);
+
         doMapQuery();
 
     }
@@ -505,16 +534,16 @@ public class MapDemoActivity extends FragmentActivity implements
         }
         final ParseGeoPoint myPoint = geoPointFromLocation(myLoc);
         // Create the map Parse query
-        ParseQuery<GeoMessagePost> mapQuery = GeoMessagePost.getQuery();
+        ParseQuery<Moment> mapQuery = Moment.getQuery();
         // Set up additional query filters
         mapQuery.whereWithinKilometers("location", myPoint, MAX_POST_SEARCH_DISTANCE);
         mapQuery.include("user");
         mapQuery.orderByDescending("createdAt");
         mapQuery.setLimit(MAX_POST_SEARCH_RESULTS);
         // Kick off the query in the background
-        mapQuery.findInBackground(new FindCallback<GeoMessagePost>() {
+        mapQuery.findInBackground(new FindCallback<Moment>() {
             @Override
-            public void done(List<GeoMessagePost> objects, ParseException e) {
+            public void done(List<Moment> objects, ParseException e) {
                 if (e != null) {
                     if (APPDEBUG) {
                         Log.d(APPTAG, "An error occurred while querying for map posts.", e);
@@ -532,7 +561,7 @@ public class MapDemoActivity extends FragmentActivity implements
                 // Posts to show on the map
                 Set<String> toKeep = new HashSet<String>();
                 // Loop through the results of the search
-                for (GeoMessagePost post : objects) {
+                for (Moment post : objects) {
                     // Add this post to the list of map pins to keep
                     toKeep.add(post.getObjectId());
                     // Check for an existing marker for this post
@@ -560,7 +589,7 @@ public class MapDemoActivity extends FragmentActivity implements
 //                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                         markerOpts =
-                                markerOpts.title(post.getTitle()).icon(
+                                markerOpts.title(post.getCaption()).icon(
                                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                     } else {
@@ -576,7 +605,7 @@ public class MapDemoActivity extends FragmentActivity implements
                         }
                         // Display a green marker with the post information
                         markerOpts =
-                                markerOpts.title(post.getTitle()).snippet(post.getUser().getUsername())
+                                markerOpts.title(post.getCaption()).snippet(post.getAuthor().getUsername())
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     }
                     // Add a new marker
@@ -592,4 +621,134 @@ public class MapDemoActivity extends FragmentActivity implements
             }
         });
     }
+
+
+    /*
+     * Displays a circle on the map representing the search radius
+     */
+    private void updateCircle(LatLng myLatLng) {
+        if (mapCircle == null) {
+            mapCircle =
+                    mapFragment.getMap().addCircle(
+                            new CircleOptions().center(myLatLng).radius(radius * METERS_PER_FEET));
+            int baseColor = Color.DKGRAY;
+            mapCircle.setStrokeColor(baseColor);
+            mapCircle.setStrokeWidth(2);
+            mapCircle.setFillColor(Color.argb(50, Color.red(baseColor), Color.green(baseColor),
+                    Color.blue(baseColor)));
+        }
+        mapCircle.setCenter(myLatLng);
+        mapCircle.setRadius(radius * METERS_PER_FEET); // Convert radius in feet to meters.
+    }
+
+    /*
+     * Zooms the map to show the area of interest based on the search radius
+     */
+    private void updateZoom(LatLng myLatLng) {
+        // Get the bounds to zoom to
+        LatLngBounds bounds = calculateBoundsWithCenter(myLatLng);
+        // Zoom to the given bounds
+        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
+    }
+
+    /*
+     * Helper method to calculate the offset for the bounds used in map zooming
+     */
+    private double calculateLatLngOffset(LatLng myLatLng, boolean bLatOffset) {
+        // The return offset, initialized to the default difference
+        double latLngOffset = OFFSET_CALCULATION_INIT_DIFF;
+        // Set up the desired offset distance in meters
+        float desiredOffsetInMeters = radius * METERS_PER_FEET;
+        // Variables for the distance calculation
+        float[] distance = new float[1];
+        boolean foundMax = false;
+        double foundMinDiff = 0;
+        // Loop through and get the offset
+        do {
+            // Calculate the distance between the point of interest
+            // and the current offset in the latitude or longitude direction
+            if (bLatOffset) {
+                Location.distanceBetween(myLatLng.latitude, myLatLng.longitude, myLatLng.latitude
+                        + latLngOffset, myLatLng.longitude, distance);
+            } else {
+                Location.distanceBetween(myLatLng.latitude, myLatLng.longitude, myLatLng.latitude,
+                        myLatLng.longitude + latLngOffset, distance);
+            }
+            // Compare the current difference with the desired one
+            float distanceDiff = distance[0] - desiredOffsetInMeters;
+            if (distanceDiff < 0) {
+                // Need to catch up to the desired distance
+                if (!foundMax) {
+                    foundMinDiff = latLngOffset;
+                    // Increase the calculated offset
+                    latLngOffset *= 2;
+                } else {
+                    double tmp = latLngOffset;
+                    // Increase the calculated offset, at a slower pace
+                    latLngOffset += (latLngOffset - foundMinDiff) / 2;
+                    foundMinDiff = tmp;
+                }
+            } else {
+                // Overshot the desired distance
+                // Decrease the calculated offset
+                latLngOffset -= (latLngOffset - foundMinDiff) / 2;
+                foundMax = true;
+            }
+        } while (Math.abs(distance[0] - desiredOffsetInMeters) > OFFSET_CALCULATION_ACCURACY);
+        return latLngOffset;
+    }
+
+    /*
+     * Helper method to calculate the bounds for map zooming
+     */
+    LatLngBounds calculateBoundsWithCenter(LatLng myLatLng) {
+        // Create a bounds
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+
+        // Calculate east/west points that should to be included
+        // in the bounds
+        double lngDifference = calculateLatLngOffset(myLatLng, false);
+        LatLng east = new LatLng(myLatLng.latitude, myLatLng.longitude + lngDifference);
+        builder.include(east);
+        LatLng west = new LatLng(myLatLng.latitude, myLatLng.longitude - lngDifference);
+        builder.include(west);
+
+        // Calculate north/south points that should to be included
+        // in the bounds
+        double latDifference = calculateLatLngOffset(myLatLng, true);
+        LatLng north = new LatLng(myLatLng.latitude + latDifference, myLatLng.longitude);
+        builder.include(north);
+        LatLng south = new LatLng(myLatLng.latitude - latDifference, myLatLng.longitude);
+        builder.include(south);
+
+        return builder.build();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_map_demo, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_new) {
+            Intent intent = new Intent(MapDemoActivity.this, AddMomentsActivity.class);
+            intent.putExtra("Location", currentLocation);
+            startActivityForResult(intent, MOMENTS2_REQUEST_CODE);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

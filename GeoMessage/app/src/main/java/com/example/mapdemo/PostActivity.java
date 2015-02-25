@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -44,7 +43,7 @@ public class PostActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_post, menu);
+//        getMenuInflater().inflate(R.menu.menu_map_demo, menu);
         return true;
     }
 
